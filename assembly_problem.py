@@ -86,9 +86,9 @@ def circular_slice(s, i, l):
             If  i + l <= len(s), then s[i : i + l] is a valid python slice.
         """
 
-        cslice = s[i : i + l]
-
         endpos = i + l - 1
+
+        cslice = s[i : endpos + 1]
 
     else:
         """
@@ -96,9 +96,9 @@ def circular_slice(s, i, l):
             and s[0 : i + l - len(s)] as the wrap-around suffix.
         """
 
-        cslice = s[i : ] + s[ : i + l - n]
-
         endpos = i + l - n - 1
+
+        cslice = s[i : ] + s[ : endpos + 1]
 
     return (cslice, startpos, endpos)
 
@@ -191,7 +191,7 @@ def pretty_print_layout(seqs, records):
     n = len(seqs)
 
     if n != len(records):
-        raise ValueError("len(seqs) != len(records.)")
+        raise ValueError("len(seqs) != len(records).")
 
     records = sorted(records, key=lambda t: t[1])
 
