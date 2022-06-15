@@ -9,7 +9,9 @@ comp_tab = str.maketrans(base_for, base_rev)
 
 def create_random_genome(size):
     """
-        Creates a random sequence of nucleotides.
+        @func create_random_genome:
+
+            Creates a random sequence of nucleotides.
 
         @param size: the length of the sequence.
 
@@ -23,7 +25,9 @@ def create_random_genome(size):
 
 def write_fasta(filename, seqs, names):
     """
-        Writes a fasta file.
+        @func write_fasta:
+
+            Writes a fasta file.
 
         @param filename: The name of the fasta to write.
 
@@ -43,9 +47,11 @@ def write_fasta(filename, seqs, names):
 
 def circular_slice(s, i, l):
     """
-        Returns a slice from the sequence s, where s is treated
-        as a circular sequence. That is, if n = len(s), then semantically
-        we have that s[i] == s[i + n] always.
+        @func circular_slice:
+
+            Returns a slice from the sequence s, where s is treated
+            as a circular sequence. That is, if n = len(s), then semantically
+            we have that s[i] == s[i + n] always.
 
         @param s: The sequence string.
 
@@ -99,9 +105,11 @@ def circular_slice(s, i, l):
 def create_reads(genome, read_depth, mean_read_length, sd_read_length, reverse_complements=True):
 
     """
-        Simulates random perfect reads from the sequence @genome, which is treated as a circular
-        sequence. Read lengths are drawn from a normal distribution (not necessarily realistic but
-        fine for now).
+        @func create_reads:
+
+            Simulates random perfect reads from the sequence @genome, which is treated as a circular
+            sequence. Read lengths are drawn from a normal distribution (not necessarily realistic but
+            fine for now).
 
         @param genome: The genome sequence string.
 
@@ -164,3 +172,30 @@ def create_reads(genome, read_depth, mean_read_length, sd_read_length, reverse_c
         records.append((i, startpos, readrev))
 
     return tuple(seqs), tuple(names), list(records)
+
+
+def pretty_print_layout(seqs, records):
+    """
+        @func pretty_print_layout:
+
+            Print out sequences according to their gold standard
+            layout.
+
+        @param seqs: The sequences.
+
+        @param records: The sequence record triplets (defined at @create_reads).
+
+        @raise ValueError: len(seqs) != len(records).
+    """
+
+    n = len(seqs)
+
+    if n != len(records):
+        raise ValueError("len(seqs) != len(records.)")
+
+    records = sorted(records, key=lambda t: t[1])
+
+    for i in range(n):
+        u, upos, _ = records[i]
+        useq = seqs[u]
+        print("{:>8}: {}{}".format(u, ' ' * upos, useq))
