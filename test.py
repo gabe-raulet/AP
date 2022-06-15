@@ -1,9 +1,9 @@
 import AssemblyProblem as AP
 from OverlapGraph import OverlapGraph
 
-genome_length       = 10
-read_depth          = 5
-mean_read_length    = 7
+genome_length       = 50
+read_depth          = 15
+mean_read_length    = 12
 sd_read_length      = 0
 reverse_complements = False
 
