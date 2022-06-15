@@ -1,40 +1,40 @@
-from igraph import *
+from igraph import Graph as IGraph
 
 class OverlapGraph(object):
     """
-        @class OverlapGraph:
+    @class OverlapGraph:
 
-            Class for an overlap graph G = (V,E) where V = \{0,...,self.n-1}
-            is the set of reads/vertices and E is the set of read overlaps.
+        Class for an overlap graph G = (V,E) where V = \{0,...,self.n-1}
+        is the set of reads/vertices and E is the set of read overlaps.
 
-        @var self.n: Number of reads/vertices in graph.
+    @var self.n: Number of reads/vertices in graph.
 
-        @var self.g: Adjacency list of graph. For a given u \in V,
-                     if u -> v  is an edge in the graph then self.g[u][v]
-                     exists and is equal to the labelled suffix of the
-                     read overlap u -> v.
+    @var self.g: Adjacency list of graph. For a given u \in V,
+                 if u -> v  is an edge in the graph then self.g[u][v]
+                 exists and is equal to the labelled suffix of the
+                 read overlap u -> v.
     """
-    def __init__(self, n):
+    def __init__(self, n : int):
         self.n = n
         self.g = {u : dict() for u in range(n)}
 
-    def add_overlap(self, u, v, vsuf):
+    def add_overlap(self, u : int, v : int, vsuf : str):
         """
-            @instance_method: add_overlap
+        @instance_method: add_overlap
 
-                Adds an overlap edge to the graph.
+            Adds an overlap edge to the graph.
 
-            @param u: The source read index.
+        @param u: The source read index.
 
-            @param v: The target read index.
+        @param v: The target read index.
 
-            @param vsuf: The sequence that labels this overlap. This is
-                         the suffix of v that overhangs past the last matching
-                         symbol of u and v read from left to right.
+        @param vsuf: The sequence that labels this overlap. This is
+                     the suffix of v that overhangs past the last matching
+                     symbol of u and v read from left to right.
 
-            @raise IndexError: If given invalid read indices.
+        @raise IndexError: If given invalid read indices.
 
-            @raise ValueError: If the labelled suffix is the empty string.
+        @raise ValueError: If the labelled suffix is the empty string.
         """
 
         if u < 0 or u >= self.n or v < 0 or v >= self.n:
@@ -49,28 +49,27 @@ class OverlapGraph(object):
         self.g[u][v] = vsuf
 
 
-    def num_edges(self):
-    """
+    def num_edges(self) -> int:
+        """
         @instance_method num_edges:
 
             Calculates the number of overlaps/edges in the graph.
 
         This operation takes O(|V|) time each call because the edge count
         is not stored internally and must be recalculated each time.
-    """
+        """
         return sum(len(adj) for v,adj in self.g.items())
 
-    def get_igraph(self):
-    """
+    def get_igraph(self) -> IGraph:
+        """
         @instance_method get_igraph:
 
             Constructs and returns a new igraph object created from the contents
             of the self graph.
 
         @returns G: igraph object
-
-    """
-        G = Graph(self.n, directed = True)
+        """
+        G = IGraph(self.n, directed = True)
         edges = []
         sufs = []
         for u, adj in self.g.items():
@@ -82,8 +81,8 @@ class OverlapGraph(object):
         return G
 
     @classmethod
-    def generate(seqs, records, genome_length):
-    """
+    def generate(cls, seqs : tuple, records : list, genome_length : int): # -> cls: (annotations don't work for this use case apparently)
+        """
         @classmethod generate:
 
             Constructs a new OverlapGraph object usingt input reads and
@@ -103,7 +102,7 @@ class OverlapGraph(object):
         @raise AssertionError: If records are incorrectly sorted (should never happen).
 
         @return instantiated OverlapGraph object.
-    """
+        """
 
         if not isinstance(seqs, tuple):
             raise TypeError("Input sequences are not a tuple.")
@@ -131,7 +130,7 @@ class OverlapGraph(object):
 
             for vfind in range(ufind+1, 2*n):
 
-                if vfind < N:
+                if vfind < n:
                     v, vpos, vrev = records[vfind]
                 else:
                     v, vpos, vrev = records[vfind - n]
