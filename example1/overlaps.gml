@@ -1,4 +1,4 @@
-Creator "igraph version 0.9.0-pre+0afacadd Wed Jun 15 14:04:32 2022"
+Creator "igraph version 0.9.0-pre+0afacadd Wed Jun 15 14:07:44 2022"
 Version 1
 graph
 [
@@ -34,133 +34,157 @@ graph
   edge
   [
     source 0
-    target 1
-    suf "TA"
+    target 3
+    suf "CGG"
   ]
   edge
   [
     source 0
     target 2
-    suf "TAT"
+    suf "CGGTT"
   ]
   edge
   [
-    source 1
-    target 2
-    suf "T"
+    source 0
+    target 4
+    suf "CGGTTA"
   ]
   edge
   [
     source 1
     target 3
-    suf "TTGC"
+    suf "CGG"
   ]
   edge
   [
     source 1
-    target 5
-    suf "TTGC"
-  ]
-  edge
-  [
-    source 1
-    target 4
-    suf "TTGCTA"
-  ]
-  edge
-  [
-    source 1
-    target 6
-    suf "TTGC"
-  ]
-  edge
-  [
-    source 2
-    target 3
-    suf "TGC"
-  ]
-  edge
-  [
-    source 2
-    target 5
-    suf "TGC"
-  ]
-  edge
-  [
-    source 2
-    target 4
-    suf "TGCTA"
-  ]
-  edge
-  [
-    source 2
-    target 6
-    suf "TGC"
-  ]
-  edge
-  [
-    source 3
-    target 4
-    suf "TA"
-  ]
-  edge
-  [
-    source 3
-    target 0
-    suf "TAAT"
-  ]
-  edge
-  [
-    source 3
-    target 1
-    suf "TAATTA"
-  ]
-  edge
-  [
-    source 4
-    target 0
-    suf "AT"
-  ]
-  edge
-  [
-    source 4
-    target 1
-    suf "ATTA"
-  ]
-  edge
-  [
-    source 4
     target 2
-    suf "ATTAT"
+    suf "CGGTT"
   ]
   edge
   [
-    source 5
+    source 1
     target 4
-    suf "TA"
+    suf "CGGTTA"
+  ]
+  edge
+  [
+    source 2
+    target 4
+    suf "A"
+  ]
+  edge
+  [
+    source 2
+    target 6
+    suf "AG"
+  ]
+  edge
+  [
+    source 2
+    target 5
+    suf "AGA"
+  ]
+  edge
+  [
+    source 2
+    target 0
+    suf "AGAAC"
+  ]
+  edge
+  [
+    source 2
+    target 1
+    suf "AGAAC"
+  ]
+  edge
+  [
+    source 3
+    target 2
+    suf "TT"
+  ]
+  edge
+  [
+    source 3
+    target 4
+    suf "TTA"
+  ]
+  edge
+  [
+    source 3
+    target 6
+    suf "TTAG"
+  ]
+  edge
+  [
+    source 3
+    target 5
+    suf "TTAGA"
+  ]
+  edge
+  [
+    source 4
+    target 6
+    suf "G"
+  ]
+  edge
+  [
+    source 4
+    target 5
+    suf "GA"
+  ]
+  edge
+  [
+    source 4
+    target 0
+    suf "GAAC"
+  ]
+  edge
+  [
+    source 4
+    target 1
+    suf "GAAC"
   ]
   edge
   [
     source 5
     target 0
-    suf "TAAT"
+    suf "AC"
   ]
   edge
   [
     source 5
     target 1
-    suf "TAATTA"
+    suf "AC"
+  ]
+  edge
+  [
+    source 5
+    target 3
+    suf "ACCGG"
+  ]
+  edge
+  [
+    source 6
+    target 5
+    suf "A"
   ]
   edge
   [
     source 6
     target 0
-    suf "TAAT"
+    suf "AAC"
   ]
   edge
   [
     source 6
     target 1
-    suf "TAATTA"
+    suf "AAC"
+  ]
+  edge
+  [
+    source 6
+    target 3
+    suf "AACCGG"
   ]
 ]

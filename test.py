@@ -4,7 +4,7 @@ from OverlapGraph import OverlapGraph
 genome_length       = 10
 read_depth          = 5
 mean_read_length    = 7
-sd_read_length      = 1
+sd_read_length      = 0
 reverse_complements = False
 
 genome = AP.create_random_genome(genome_length)
