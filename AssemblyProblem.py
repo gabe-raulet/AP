@@ -102,6 +102,7 @@ def circular_slice(s : str, i : int, l : int) -> tuple:
 
     return (cslice, startpos, endpos)
 
+
 def create_reads(genome : str, read_depth : int, mean_read_length : int, sd_read_length : float, reverse_complements : bool = True) -> tuple:
 
     """
@@ -173,6 +174,52 @@ def create_reads(genome : str, read_depth : int, mean_read_length : int, sd_read
 
     return tuple(seqs), tuple(names), list(records)
 
+def define_reads(genome : str, readinfo : list) -> tuple:
+
+    """
+    @func define_reads:
+
+        Creates perfect reads from the sequence @genome (treated as circular sequence) as specified
+        by the user input.
+
+    @param genome: The genome sequence string.
+
+    @param readinfo: Triplets (readpos, readlen, readrev) specifying the starting position of
+                     each read relative to the genome, the length of the read, and whether
+                     the read has been reverse complemented relative to the genome.
+
+    @return (seqs, names, records): Defined in create_reads.__doc__.
+
+    """
+
+    genome_length = len(genome)
+    num_reads = len(readinfo)
+
+    seqs = []
+    names = []
+    records = []
+
+    for i in range(num_reads):
+
+        readpos, readlen, readrev = readinfo[i]
+
+        readseq, startpos, endpos = circular_slice(genome, readpos, readlen)
+
+        if startpos < endpos:
+            coords = "[{}..{}]".format(startpos, endpos)
+        else:
+            coords = "[{}..) ++ [..{}]".format(startpos, endpos)
+
+        readname = "R{} | coords :: {} | length :: {} | rev :: {}".format(i, coords, readlen, readrev)
+
+        if readrev:
+            readseq = readseq.translate(comp_tab)[::-1]
+
+        seqs.append(readseq)
+        names.append(readname)
+        records.append((i, startpos, readrev))
+
+    return tuple(seqs), tuple(names), list(records)
 
 def pretty_layout(seqs : tuple, records : list, filename = None) -> None:
     """
@@ -183,7 +230,7 @@ def pretty_layout(seqs : tuple, records : list, filename = None) -> None:
 
     @param seqs: The sequences.
 
-    @param records: The sequence record triplets (defined at @create_reads).
+    @param records: The sequence record triplets (defined in create_reads.__doc__).
 
     @param filename: The (optional) output file path. If filename is a str object,
                      then a file will be created with the output redirected there.

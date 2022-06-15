@@ -90,7 +90,7 @@ class OverlapGraph(object):
 
         @param seqs: Tuple of reads ordered be read index.
 
-        @param records: Read triplets. Look at @create_reads function for definition.
+        @param records: Read triplets. Look at AssemblyProblem.create_reads.__doc__ function for definition.
 
         @param genome_length: Reference genome length; used to calculate overlaps
                               that cross the circular barrier.
