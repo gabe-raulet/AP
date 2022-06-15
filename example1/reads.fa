@@ -1,0 +1,14 @@
+>R0 | coords :: [7..) ++ [..3] | length :: 7 | rev :: False
+TGCTAAT
+>R1 | coords :: [7..) ++ [..5] | length :: 9 | rev :: False
+TGCTAATTA
+>R2 | coords :: [1..6] | length :: 6 | rev :: False
+AATTAT
+>R3 | coords :: [4..9] | length :: 6 | rev :: False
+TATTGC
+>R4 | coords :: [5..) ++ [..1] | length :: 7 | rev :: False
+ATTGCTA
+>R5 | coords :: [4..9] | length :: 6 | rev :: False
+TATTGC
+>R6 | coords :: [5..9] | length :: 5 | rev :: False
+ATTGC

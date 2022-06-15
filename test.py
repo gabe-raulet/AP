@@ -1,16 +1,17 @@
 import AssemblyProblem as AP
 from OverlapGraph import OverlapGraph
 
-genome_length       = 20
-read_depth          = 10
-mean_read_length    = 10
-sd_read_length      = 4
+genome_length       = 10
+read_depth          = 5
+mean_read_length    = 7
+sd_read_length      = 1
 reverse_complements = False
 
 genome = AP.create_random_genome(genome_length)
 
 seqs, names, records = AP.create_reads(genome, read_depth, mean_read_length, sd_read_length, reverse_complements)
 AP.pretty_layout(seqs, records, "layout.txt")
+AP.pretty_layout(seqs, records)
 
 overlap_graph = OverlapGraph.generate(seqs, records, genome_length)
 

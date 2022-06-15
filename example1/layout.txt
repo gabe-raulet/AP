@@ -1,0 +1,7 @@
+       2:  AATTAT
+       3:     TATTGC
+       5:     TATTGC
+       4:      ATTGCTA
+       6:      ATTGC
+       0:        TGCTAAT
+       1:        TGCTAATTA

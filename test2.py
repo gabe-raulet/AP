@@ -20,5 +20,5 @@ AP.pretty_layout(seqs, records)
 AP.write_fasta("genome.fa", [genome], ["example"])
 AP.write_fasta("reads.fa", seqs, names)
 
-#  overlap_graph = OverlapGraph.generate(seqs, records, len(genome))
-#  overlap_graph.get_igraph().write_gml("overlaps.gml")
+overlap_graph = OverlapGraph.generate(seqs, records, len(genome))
+overlap_graph.get_igraph().write_gml("overlaps.gml")
