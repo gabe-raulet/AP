@@ -11,9 +11,9 @@ def create_random_genome(size):
     """
         Creates a random sequence of nucleotides.
 
-        @param size: the length of the sequence
+        @param size: the length of the sequence.
 
-        @raise IndexError: if size <= 0
+        @raise IndexError: if size <= 0.
     """
 
     if (size <= 0):
@@ -25,13 +25,13 @@ def write_fasta(filename, seqs, names):
     """
         Writes a fasta file.
 
-        @param filename: the name of the fasta to write
+        @param filename: The name of the fasta to write.
 
-        @param seqs: a list of nucleotide strings
+        @param seqs: A list of nucleotide strings.
 
-        @param names: a list of associated fasta record names
+        @param names: A list of associated fasta record names.
 
-        @raise IndexError: if len(seqs) != lens(names)
+        @raise IndexError: If len(seqs) != lens(names).
     """
 
     if len(seqs) != len(names):
@@ -42,35 +42,125 @@ def write_fasta(filename, seqs, names):
             f.write(">{}\n{}\n".format(names[i], seqs[i]))
 
 def circular_slice(s, i, l):
+    """
+        Returns a slice from the sequence s, where s is treated
+        as a circular sequence. That is, if n = len(s), then semantically
+        we have that s[i] == s[i + n] always.
+
+        @param s: The sequence string.
+
+        @param i: The starting index of the slice.
+
+        @param l: The length of the slice.
+
+        @return (cslice, startpos, endpos):
+
+            cslice: The computed circular slice.
+
+            startpos: The starting position of cslice relative to s,
+                      i.e. s[startpos] == cslice[0].
+
+            endpos: The modulo reduced ending position (inclusive) of
+                    cslice relative to s, i.e. s[endpos] == cslice[-1].
+    """
+
     n = len(s)
-    if i <= n - l: return (s[i:i+l], i, i+l-1)
-    else: return (s[i:] + s[:i+l-G], i, i+l-G-1)
+
+    i %= n
+
+    """
+        In case i >= len(s), we can just reduce modulo len(s) without
+        affecting the result.
+    """
+
+    startpos = i
+
+    if i + l <= n:
+        """
+            If  i + l <= len(s), then s[i : i + l] is a valid python slice.
+        """
+
+        cslice = s[i : i + l]
+
+        endpos = i + l - 1
+
+    else:
+        """
+            If i + l > len(s), then we take the python slice s[i : len(s)] as prefix
+            and s[0 : i + l - len(s)] as the wrap-around suffix.
+        """
+
+        cslice = s[i : ] + s[ : i + l - n]
+
+        endpos = i + l - n - 1
+
+    return (cslice, startpos, endpos)
 
 def create_reads(genome, read_depth, mean_read_length, sd_read_length, reverse_complements=True):
+
+    """
+        Simulates random perfect reads from the sequence @genome, which is treated as a circular
+        sequence. Read lengths are drawn from a normal distribution (not necessarily realistic but
+        fine for now).
+
+        @param genome: The genome sequence string.
+
+        @param read_depth: The average read depth.
+
+        @param mean_read_length: The average read length.
+
+        @param sd_read_length: The standard deviation of the read length normal distribution.
+
+        @param reverse_complements: Boolean for whether reverse complements should be simulated
+                                    with 1/2 probability.
+
+        @return (seqs, names, records):
+
+            seqs: The raw simulated read sequence strings, ordered by index (immutable tuple).
+
+            names: The generated read "names" (think more like descriptions),
+                   ordered by index (immutable tuple).
+
+            records: Triplets recording basic info for each read sequence. For example, for read
+                     i, records[i] = (i, startpos, readrev), where startpos is the starting
+                     position of read i relative to the genome, and readrev is a boolean
+                     representing whether the read is reverse complemented relative to the genome.
+                     Returned as a list because it is intended for this list to be sorted by
+                     start position.
+    """
 
     genome_length = len(genome)
     num_reads = int((genome_length * read_depth) / mean_read_length)
 
     seqs = []
+    names = []
+    records = []
 
     for i in range(num_reads):
 
-        readpos = random.randint(0,genome_length-1):
+        readpos = random.randint(0,genome_length-1)
 
-            while True:
-                readlen = int(np.random.normal(mean_read_length, sd_read_length))
-                if readlen > 0:
-                    break
+        while True:
+            readlen = int(np.random.normal(mean_read_length, sd_read_length))
+            if readlen > 0:
+                break
 
         readrev = False if not reverse_complements else bool(random.randint(0,1))
 
-        readseq, startpos, endpos = circular_slice(genome, startpos, endpos)
+        readseq, startpos, endpos = circular_slice(genome, readpos, readlen)
 
         if startpos < endpos:
             coords = "[{}..{}]".format(startpos, endpos)
         else:
             coords = "[{}..) ++ [..{}]".format(startpos, endpos)
 
-        readname = "R{} | coords :: {} | length :: {} | rev :: {}".format(i+1, coords, readlen, readrev)
+        readname = "R{} | coords :: {} | length :: {} | rev :: {}".format(i, coords, readlen, readrev)
 
-    return seqs
+        if readrev:
+            readseq = readseq.translate(comp_tab)[::-1]
+
+        seqs.append(readseq)
+        names.append(readname)
+        records.append((i, startpos, readrev))
+
+    return tuple(seqs), tuple(names), list(records)
