@@ -23,7 +23,7 @@ def create_random_genome(size : int) -> str:
 
     return "".join(random.choice(['A','C','G','T']) for _ in range(size))
 
-def write_fasta(filename : str, seqs : str, names : str) -> None:
+def write_fasta(filename : str, seqs : list, names : list) -> None:
     """
     @func write_fasta:
 

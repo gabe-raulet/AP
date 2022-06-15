@@ -136,10 +136,10 @@ class OverlapGraph(object):
                     v, vpos, vrev = records[vfind - n]
                     vpos += genome_length
 
+                assert upos <= vpos
+
                 vseq = seqs[v]
                 vlen = len(vseq)
-
-                assert upos <= vpos
 
                 if vpos >= upos + ulen:
                     break
