@@ -258,3 +258,101 @@ def pretty_layout(seqs : tuple, records : list, filename = None) -> None:
             useq = seqs[u]
             sys.stdout.write("{:>8}: {}{}\n".format(u, ' ' * upos, useq))
         sys.stdout.flush()
+
+def read_fasta(fasta : str) -> tuple:
+    """
+    @func read_fasta:
+
+        Reads the sequences and names from a FASTA file.
+
+    @param fasta: FASTA filename.
+
+    @raise AssertionError: If len(seqs) != len(names).
+
+    @return (seqs, names):
+
+        seqs: The raw read sequences.
+
+        names: The corresponding read sequence names.
+    """
+    seqs = []
+    names = []
+    with open(fasta, "r") as f:
+        seqlines = []
+        name = ""
+        for line in f.readlines():
+            if line.startswith('>'):
+                if len(seqlines) > 0:
+                    seqs.append("".join(seqlines))
+                    names.append(name)
+                    seqlines = []
+                name = line.lstrip('>').rstrip()
+            else:
+                seqlines.append(line.rstrip())
+        if len(seqlines) > 0:
+            seqs.append("".join(seqlines))
+            names.append(name)
+    assert len(seqs) == len(names)
+    return seqs, names
+
+def read_problem_instance(genome_filename : str, reads_filename : str) -> tuple:
+    """
+    @func read_problem_instance:
+
+        Reads a problem instance from disk. Assumes problem instance
+        was previously created by this module and written to disk by it.
+
+    @param genome_filename: The FASTA file corresponding to the reference genome.
+
+    @param reads_filename: The FASTA file corresponding to the reads.
+
+    @raise ValueError: If the genome sequence and the input reads are incompatible.
+                       For each read sequence read from disk, its coordinate information
+                       is cross-referenced with the genome to make sure the two files
+                       are consistent and refer to the same problem instance.
+
+                       Additionally, we require that the genome has exactly one sequence/chromosome.
+
+    @return (genome, seqs, names, records):
+
+        genome: The genome sequence string.
+
+        seqs: The ordered tuple of read sequence strings.
+
+        names: The ordered tuple of read sequence names (not vital when
+               reading a problem from disk but here for consistency with
+               other functions).
+
+        records: The sequence record triplets (defined in create_reads.__doc__).
+    """
+
+    _genome, _genome_name = read_fasta(genome_filename)
+
+    if len(_genome) != 1:
+        raise ValueError("Genome FASTA has more than one sequence")
+
+    genome = _genome.pop()
+    genome_name = _genome_name.pop()
+
+    seqs, names = read_fasta(reads_filename)
+
+    records = []
+
+    for i in range(len(names)):
+        readseq = seqs[i]
+        readlen = len(readseq)
+        name = names[i]
+        readpos = int(name.split('|')[1].split('[')[1].split('..')[0])
+        readrev = bool(name.split("::")[-1].lstrip().rstrip() == "True")
+
+        readseq_check, startpos_check, endpos_check = circular_slice(genome, readpos, readlen)
+
+        if readrev:
+            readseq_check = readseq_check.translate(comp_tab)[::-1]
+
+        if readseq_check != readseq or startpos_check != readpos:
+            raise ValueError("Genome fasta and reads fasta are incompatible")
+
+        records.append((i, readpos, readrev))
+
+    return str(genome), tuple(seqs), tuple(names), list(records)
