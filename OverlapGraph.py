@@ -13,12 +13,33 @@ class OverlapGraph(object):
                  if u -> v  is an edge in the graph then self.g[u][v]
                  exists and is equal to the labelled suffix of the
                  read overlap u -> v.
-    """
-    def __init__(self, n : int):
-        self.n = n
-        self.g = {u : dict() for u in range(n)}
 
-    def add_overlap(self, u : int, v : int, vsuf : str):
+    @var self.seqs: Tuple of raw sequencing reads.
+
+    """
+    def __init__(self, seqs : tuple):
+        self.n = len(seqs)
+        self.g = {u : dict() for u in range(self.n)}
+        self.seqs = seqs
+
+    def get_pruned(self):
+        contained = set()
+        for u in self.g:
+            for v in self.g[u]:
+                if self.g[u][v] == -1:
+                    contained.add(v)
+
+        pruned = OverlapGraph(self.seqs)
+
+        for u in self.g:
+            if not u in contained:
+                for v in self.g[u]:
+                    if not v in contained:
+                        pruned.add_overlap(u, v, self.g[u][v])
+
+        return pruned
+
+    def add_overlap(self, u : int, v : int, l : int):
         """
         @instance_method: add_overlap
 
@@ -28,9 +49,10 @@ class OverlapGraph(object):
 
         @param v: The target read index.
 
-        @param vsuf: The sequence that labels this overlap. This is
+        @param l: The length of the sequence that labels this overlap. This is
                      the suffix of v that overhangs past the last matching
-                     symbol of u and v read from left to right.
+                     symbol of u and v read from left to right. If v is
+                     contained in u, then l == -1.
 
         @raise IndexError: If given invalid read indices.
 
@@ -40,14 +62,13 @@ class OverlapGraph(object):
         if u < 0 or u >= self.n or v < 0 or v >= self.n:
             raise IndexError("Trying to add overlap with out of bounds indices")
 
-        if len(vsuf) == 0:
+        if l == 0:
             raise ValueError("Overlap suffix must not be the empty string")
 
-        if v in self.g[u] and len(self.g[u][v]) <= len(vsuf):
+        if v in self.g[u] and self.g[u][v] <= l:
             return
 
-        self.g[u][v] = vsuf
-
+        self.g[u][v] = l
 
     def num_edges(self) -> int:
         """
@@ -78,6 +99,7 @@ class OverlapGraph(object):
                 sufs.append(suffix)
         G.add_edges(edges)
         G.es['suf'] = sufs
+        G.vs['seq'] = self.seqs
         return G
 
     @classmethod
@@ -97,7 +119,7 @@ class OverlapGraph(object):
 
         @raise TypeError: If input parameters have wrong type.
 
-        @raise ValueErorr: If len(seqs) != len(records).
+        @raise ValueError: If len(seqs) != len(records).
 
         @raise AssertionError: If records are incorrectly sorted (should never happen).
 
@@ -118,7 +140,7 @@ class OverlapGraph(object):
         if len(records) != n:
             raise ValueError("len(seqs) != len(records)")
 
-        g = cls(n)
+        g = cls(seqs)
 
         records = sorted(records, key=lambda t: t[1]) * 2
 
@@ -142,12 +164,30 @@ class OverlapGraph(object):
                 vlen = len(vseq)
 
                 if vpos >= upos + ulen:
+                    """
+                    If vpos >= upos + ulen, then the closest read that starts
+                    to the right of u is out of range, so we can cutoff early.
+                    """
                     break
 
-                if vpos + vlen > upos + ulen:
-                    suflen = vpos + vlen - upos - ulen
-                    g.add_overlap(u, v, vseq[-suflen : ])
+                if vpos + vlen <= upos + ulen:
+                    """
+                    If vpos + vlen <= upos + ulen, then v must be contained inside
+                    u.
+                    """
+                    g.add_overlap(u, v, -1)
+                else:
+                    """
+                    If we reach here, then v extends to the right of u by >= 1 nucleotides.
+                    If upos == vpos, then u must be contained within v.
+                    """
+                    if upos == vpos:
+                        g.add_overlap(v, u, -1)
+                    else:
+                        """
+                        Reaching here means (upos < vpos) and (upos + ulen < vpos + vlen)
+                        """
+                        suflen = vpos + vlen - upos - ulen
+                        g.add_overlap(u, v, suflen)
 
         return g
-
-

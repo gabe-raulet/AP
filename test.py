@@ -21,3 +21,7 @@ AP.write_fasta("genome.fa", [genome], ["chrom1"])
 AP.write_fasta("reads.fa", seqs, names)
 overlap_igraph.write_gml("overlaps.gml")
 
+A = overlap_graph.get_pruned()
+A.get_igraph().write_gml("pruned.gml")
+#  A.get_igraph().components().giant().write_gml("pruned.gml")
+
