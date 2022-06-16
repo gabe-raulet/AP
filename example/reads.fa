@@ -1,0 +1,100 @@
+>R0 | coords :: [2..14] | length :: 13 | rev :: False
+ACTAGTGCGACCC
+>R1 | coords :: [15..26] | length :: 12 | rev :: False
+CCAGGCGGGTGT
+>R2 | coords :: [17..28] | length :: 12 | rev :: True
+TCACACCCGCCT
+>R3 | coords :: [14..25] | length :: 12 | rev :: True
+CACCCGCCTGGG
+>R4 | coords :: [1..12] | length :: 12 | rev :: True
+GTCGCACTAGTG
+>R5 | coords :: [20..) ++ [..2] | length :: 13 | rev :: False
+CGGGTGTGATTCA
+>R6 | coords :: [6..16] | length :: 11 | rev :: False
+GTGCGACCCCC
+>R7 | coords :: [13..21] | length :: 9 | rev :: True
+CGCCTGGGG
+>R8 | coords :: [18..29] | length :: 12 | rev :: True
+ATCACACCCGCC
+>R9 | coords :: [5..15] | length :: 11 | rev :: False
+AGTGCGACCCC
+>R10 | coords :: [28..) ++ [..9] | length :: 12 | rev :: False
+ATTCACTAGTGC
+>R11 | coords :: [15..25] | length :: 11 | rev :: False
+CCAGGCGGGTG
+>R12 | coords :: [5..15] | length :: 11 | rev :: True
+GGGGTCGCACT
+>R13 | coords :: [17..26] | length :: 10 | rev :: True
+ACACCCGCCT
+>R14 | coords :: [5..15] | length :: 11 | rev :: True
+GGGGTCGCACT
+>R15 | coords :: [21..) ++ [..1] | length :: 11 | rev :: False
+GGGTGTGATTC
+>R16 | coords :: [19..) ++ [..0] | length :: 12 | rev :: True
+AATCACACCCGC
+>R17 | coords :: [11..23] | length :: 13 | rev :: True
+CCCGCCTGGGGGT
+>R18 | coords :: [0..10] | length :: 11 | rev :: True
+CGCACTAGTGA
+>R19 | coords :: [18..29] | length :: 12 | rev :: True
+ATCACACCCGCC
+>R20 | coords :: [8..18] | length :: 11 | rev :: True
+CTGGGGGTCGC
+>R21 | coords :: [25..) ++ [..7] | length :: 13 | rev :: False
+GTGATTCACTAGT
+>R22 | coords :: [26..) ++ [..5] | length :: 10 | rev :: True
+TAGTGAATCA
+>R23 | coords :: [25..) ++ [..3] | length :: 9 | rev :: False
+GTGATTCAC
+>R24 | coords :: [18..29] | length :: 12 | rev :: True
+ATCACACCCGCC
+>R25 | coords :: [29..) ++ [..8] | length :: 10 | rev :: False
+TTCACTAGTG
+>R26 | coords :: [0..11] | length :: 12 | rev :: True
+TCGCACTAGTGA
+>R27 | coords :: [9..20] | length :: 12 | rev :: False
+CGACCCCCAGGC
+>R28 | coords :: [6..16] | length :: 11 | rev :: True
+GGGGGTCGCAC
+>R29 | coords :: [6..18] | length :: 13 | rev :: True
+CTGGGGGTCGCAC
+>R30 | coords :: [11..24] | length :: 14 | rev :: True
+ACCCGCCTGGGGGT
+>R31 | coords :: [7..16] | length :: 10 | rev :: True
+GGGGGTCGCA
+>R32 | coords :: [27..) ++ [..7] | length :: 11 | rev :: False
+GATTCACTAGT
+>R33 | coords :: [25..) ++ [..5] | length :: 11 | rev :: False
+GTGATTCACTA
+>R34 | coords :: [26..) ++ [..7] | length :: 12 | rev :: True
+ACTAGTGAATCA
+>R35 | coords :: [9..19] | length :: 11 | rev :: True
+CCTGGGGGTCG
+>R36 | coords :: [12..21] | length :: 10 | rev :: True
+CGCCTGGGGG
+>R37 | coords :: [15..27] | length :: 13 | rev :: True
+CACACCCGCCTGG
+>R38 | coords :: [15..26] | length :: 12 | rev :: False
+CCAGGCGGGTGT
+>R39 | coords :: [15..25] | length :: 11 | rev :: False
+CCAGGCGGGTG
+>R40 | coords :: [4..15] | length :: 12 | rev :: False
+TAGTGCGACCCC
+>R41 | coords :: [7..17] | length :: 11 | rev :: False
+TGCGACCCCCA
+>R42 | coords :: [18..29] | length :: 12 | rev :: True
+ATCACACCCGCC
+>R43 | coords :: [14..23] | length :: 10 | rev :: True
+CCCGCCTGGG
+>R44 | coords :: [23..) ++ [..3] | length :: 11 | rev :: True
+GTGAATCACAC
+>R45 | coords :: [0..10] | length :: 11 | rev :: True
+CGCACTAGTGA
+>R46 | coords :: [6..15] | length :: 10 | rev :: False
+GTGCGACCCC
+>R47 | coords :: [1..9] | length :: 9 | rev :: False
+CACTAGTGC
+>R48 | coords :: [21..) ++ [..2] | length :: 12 | rev :: False
+GGGTGTGATTCA
+>R49 | coords :: [1..11] | length :: 11 | rev :: True
+TCGCACTAGTG

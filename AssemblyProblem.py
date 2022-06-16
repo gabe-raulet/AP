@@ -249,13 +249,15 @@ def pretty_layout(seqs : tuple, records : list, filename = None) -> None:
     if isinstance(filename, str):
         with open(filename, "w") as f:
             for i in range(n):
-                u, upos, _ = records[i]
+                u, upos, urev = records[i]
                 useq = seqs[u]
+                if urev: useq = useq.translate(comp_tab)[::-1]
                 f.write("{:>8}: {}{}\n".format(u, ' ' * upos, useq))
     else:
         for i in range(n):
-            u, upos, _ = records[i]
+            u, upos, urev = records[i]
             useq = seqs[u]
+            if urev: useq = useq.translate(comp_tab)[::-1]
             sys.stdout.write("{:>8}: {}{}\n".format(u, ' ' * upos, useq))
         sys.stdout.flush()
 
