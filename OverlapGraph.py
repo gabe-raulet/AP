@@ -39,6 +39,62 @@ class OverlapGraph(object):
 
         return pruned
 
+    def get_meyer_tr(self, fuzz):
+
+        VACANT = 0
+        INPLAY = 1
+        ELIMINATED = 2
+
+        n = self.n
+        g = self.g
+        mark = [VACANT for _ in range(n)]
+        reduce = {}
+
+        for v in g:
+            reduce[v] = {}
+            for w in g[v]:
+                reduce[v][w] = False
+
+        neighbors = lambda v: sorted([(w, g[v][w]) for w in g[v]], key=lambda t: t[1])
+
+        for v in range(n):
+            for w in g[v]:
+                mark[w] = INPLAY
+            longest = max([g[v][w] for w in g[v]] + [0]) + fuzz
+
+            v_neighbors = neighbors(v)
+
+            for w, lvw in v_neighbors:
+                if mark[w] == INPLAY:
+                    w_neighbors = neighbors(w)
+                    for x, lwx in w_neighbors:
+                        if lvw + lwx <= longest:
+                            if mark[x] == INPLAY:
+                                mark[x] = ELIMINATED
+
+            for w, lvw in v_neighbors:
+                w_neighbors = neighbors(w)
+                first = True
+                for x, lwx in w_neighbors:
+                    if lwx < fuzz or first:
+                        if mark[x] == INPLAY:
+                            mark[x] = ELIMINATED
+                    first = False
+
+            for w, lvw in v_neighbors:
+                if mark[w] == ELIMINATED:
+                    reduce[v][w] = True
+                mark[w] = VACANT
+
+        tr = OverlapGraph(self.seqs)
+
+        for u in g:
+            for w in g[u]:
+                if not reduce[u][w]:
+                    tr.add_overlap(u, w, g[u][w])
+
+        return tr
+
     def get_naive_tr(self, fuzz):
 
         g = self.g

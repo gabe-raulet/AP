@@ -2,9 +2,9 @@ import AssemblyProblem as AP
 from OverlapGraph import OverlapGraph
 
 genome_length       = 50
-read_depth          = 15
-mean_read_length    = 12
-sd_read_length      = 0
+read_depth          = 20
+mean_read_length    = 15
+sd_read_length      = 4
 reverse_complements = False
 
 genome = AP.create_random_genome(genome_length)
@@ -24,6 +24,8 @@ overlap_igraph.write_gml("overlaps.gml")
 A = overlap_graph.get_pruned()
 A.get_igraph().write_gml("pruned.gml")
 B = A.get_naive_tr(0)
-B.get_igraph().write_gml("string.gml")
+C = A.get_meyer_tr(0)
+B.get_igraph().write_gml("naive.gml")
+C.get_igraph().write_gml("meyer.gml")
 #  A.get_igraph().components().giant().write_gml("pruned.gml")
 
