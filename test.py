@@ -1,10 +1,10 @@
 import AssemblyProblem as AP
 from OverlapGraph import OverlapGraph
 
-genome_length       = 50
+genome_length       = 30
 read_depth          = 20
-mean_read_length    = 15
-sd_read_length      = 4
+mean_read_length    = 12
+sd_read_length      = 1
 reverse_complements = False
 
 genome = AP.create_random_genome(genome_length)
@@ -21,11 +21,14 @@ AP.write_fasta("genome.fa", [genome], ["chrom1"])
 AP.write_fasta("reads.fa", seqs, names)
 overlap_igraph.write_gml("overlaps.gml")
 
-A = overlap_graph.get_pruned()
-A.get_igraph().write_gml("pruned.gml")
-B = A.get_naive_tr(0)
-C = A.get_meyer_tr(0)
-B.get_igraph().write_gml("naive.gml")
-C.get_igraph().write_gml("meyer.gml")
-#  A.get_igraph().components().giant().write_gml("pruned.gml")
+G = overlap_graph.get_pruned()
+H = G.get_naive_tr(0).get_igraph()
+H.delete_vertices(H.vs.select(_degree_eq=0))
+H.write_gml("string.gml")
+
+#  A.get_igraph().write_gml("pruned.gml")
+#  B = A.get_naive_tr(0)
+#  C = A.get_meyer_tr(0)
+#  B.get_igraph().write_gml("naive.gml")
+#  C.get_igraph().write_gml("meyer.gml")
 
