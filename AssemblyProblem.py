@@ -251,14 +251,14 @@ def pretty_layout(seqs : tuple, records : list, filename = None) -> None:
             for i in range(n):
                 u, upos, urev = records[i]
                 useq = seqs[u]
-                if urev: useq = useq.translate(comp_tab)[::-1]
-                f.write("{:>8}: {}{}\n".format(u, ' ' * upos, useq))
+                uformat = ' ' * (upos-1) + '<' + useq.translate(comp_tab)[::-1] if urev else ' ' * upos + useq + '>'
+                f.write("{:>8}: {}\n".format(u, uformat))
     else:
         for i in range(n):
             u, upos, urev = records[i]
             useq = seqs[u]
-            if urev: useq = useq.translate(comp_tab)[::-1]
-            sys.stdout.write("{:>8}: {}{}\n".format(u, ' ' * upos, useq))
+            uformat = ' ' * (upos-1) + '<' + useq.translate(comp_tab)[::-1] if urev else ' ' * upos + useq + '>'
+            sys.stdout.write("{:>8}: {}\n".format(u, uformat))
         sys.stdout.flush()
 
 def read_fasta(fasta : str) -> tuple:
