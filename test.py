@@ -5,7 +5,7 @@ genome_length       = 30
 read_depth          = 20
 mean_read_length    = 12
 sd_read_length      = 1
-reverse_complements = False
+reverse_complements = True
 
 genome = AP.create_random_genome(genome_length)
 
@@ -25,10 +25,4 @@ G = overlap_graph.get_pruned()
 H = G.get_naive_tr(0).get_igraph()
 H.delete_vertices(H.vs.select(_degree_eq=0))
 H.write_gml("string.gml")
-
-#  A.get_igraph().write_gml("pruned.gml")
-#  B = A.get_naive_tr(0)
-#  C = A.get_meyer_tr(0)
-#  B.get_igraph().write_gml("naive.gml")
-#  C.get_igraph().write_gml("meyer.gml")
 
