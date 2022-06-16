@@ -23,5 +23,7 @@ overlap_igraph.write_gml("overlaps.gml")
 
 A = overlap_graph.get_pruned()
 A.get_igraph().write_gml("pruned.gml")
+B = A.get_naive_tr(0)
+B.get_igraph().write_gml("string.gml")
 #  A.get_igraph().components().giant().write_gml("pruned.gml")
 

@@ -39,6 +39,32 @@ class OverlapGraph(object):
 
         return pruned
 
+    def get_naive_tr(self, fuzz):
+
+        g = self.g
+        reduce = {}
+
+        for u in g:
+            reduce[u] = {}
+            for v in g[u]:
+                reduce[u][v] = False
+
+        for u in g:
+            for v in g[u]:
+                for w in g[v]:
+                    if w in g[u]:
+                        if g[u][v] + g[v][w] >= g[u][w] + fuzz:
+                            reduce[u][w] = True
+
+        tr = OverlapGraph(self.seqs)
+
+        for u in g:
+            for w in g[u]:
+                if not reduce[u][w]:
+                    tr.add_overlap(u, w, g[u][w])
+
+        return tr
+
     def add_overlap(self, u : int, v : int, l : int):
         """
         @instance_method: add_overlap
