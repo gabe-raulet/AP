@@ -1,0 +1,8 @@
+       6: <GTATAG
+       4:  <TATAGT
+       0:     TAGTAG>
+       7:     <AGTAGG
+       1:       <TAGGGT
+       2:        <AGGGTA
+       3:        <AGGGTA
+       5:        <AGGGTA
