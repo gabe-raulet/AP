@@ -7,6 +7,9 @@ base_for = "ACGT"
 base_rev = "TGCA"
 comp_tab = str.maketrans(base_for, base_rev)
 
+def reverse_complement(s : str) -> str:
+    return s.translate(comp_tab)[::-1]
+
 def create_random_genome(size : int) -> str:
     """
     @func create_random_genome:
