@@ -8,6 +8,15 @@ base_rev = "TGCA"
 comp_tab = str.maketrans(base_for, base_rev)
 
 def reverse_complement(s : str) -> str:
+    """
+    @func reverse_complement:
+
+        Returns the reverse complement of a DNA string.
+
+    @param s: Input string.
+
+    @return comp(s): The reverse complement of s.
+    """
     return s.translate(comp_tab)[::-1]
 
 def create_random_genome(size : int) -> str:
@@ -19,6 +28,8 @@ def create_random_genome(size : int) -> str:
     @param size: the length of the sequence.
 
     @raise IndexError: if size <= 0.
+
+    @return genome: The genome sequence.
     """
 
     if (size <= 0):
