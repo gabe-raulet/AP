@@ -3,9 +3,9 @@ from AssemblyProblem import reverse_complement, read_fasta, comp_tab
 nt4char = ['A', 'C', 'G', 'T']
 nt4map = {nt4char[i] : i for i in range(4)}
 
-def kmers(s : str, k : int):
+def gen_kmers(s : str, k : int):
     """
-    @generator kmers:
+    @generator gen_kmers:
 
         Returns a generator yielding every kmer in s.
 
@@ -20,9 +20,9 @@ def kmers(s : str, k : int):
     for i in range(l-k+1):
         yield i, s[i:i+k]
 
-def minimizers(s : str, k : int, w : int):
+def gen_minimizers(s : str, k : int, w : int):
     """
-    @generator minimizers:
+    @generator gen_minimizers:
 
         Returns a generator yielding every minimizer in s of
         length k within a window of w.
@@ -37,13 +37,17 @@ def minimizers(s : str, k : int, w : int):
             is a minimizer.
     """
 
-    l = len(s)
-    kmers = set()
-    for i in range(l-k-w+1):
-        pos, minimizer = min([(i+j, s[i+j:i+j+k]) for j in range(w)], key=lambda x: x[1])
-        if not minimizer in kmers:
-            kmers.add(minimizer)
-            yield pos, minimizer
+    if (w == 0):
+        for pos, kmer in gen_kmers(s, k):
+            yield pos, kmer
+    else:
+        l = len(s)
+        kmers = set()
+        for i in range(l-k-w+1):
+            pos, minimizer = min([(i+j, s[i+j:i+j+k]) for j in range(w)], key=lambda x: x[1])
+            if not minimizer in kmers:
+                kmers.add(minimizer)
+                yield pos, minimizer
 
 def kmercode(s : str) -> tuple:
     """
@@ -135,7 +139,7 @@ def get_kmer_array(seqs : list, k : int, w : int) -> list:
     for read_index, readseq in enumerate(seqs):
         l = len(readseq)
         if l < k: continue
-        for pos, kmer in minimizers(readseq, k, w):
+        for pos, kmer in gen_minimizers(readseq, k, w):
             code, rev = kmercode(kmer)
             kmer_array.append((code, read_index, pos, rev))
 

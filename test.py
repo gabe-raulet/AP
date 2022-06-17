@@ -13,7 +13,7 @@ seqs, names, records = AP.create_reads(genome, read_depth, mean_read_length, sd_
 AP.pretty_layout(seqs, records, "layout.txt")
 AP.pretty_layout(seqs, records)
 
-overlap_graph = OverlapGraph.generate(seqs, records, genome_length)
+overlap_graph = OverlapGraph.generate_gold_standard(seqs, records, genome_length)
 
 overlap_igraph = overlap_graph.get_igraph()
 

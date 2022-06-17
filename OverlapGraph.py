@@ -67,6 +67,9 @@ class OverlapGraph(object):
         self.seqs = seqs
 
     def get_pruned(self):
+        """
+        @func get_pruned: TODO
+        """
         contained = set()
         for u in self.g:
             for v in self.g[u]:
@@ -84,6 +87,9 @@ class OverlapGraph(object):
         return pruned
 
     def get_naive_tr(self, fuzz):
+        """
+        @func get_naive_tr: TODO
+        """
 
         g = self.g
         reduce = {u : {} for u in g}
@@ -179,9 +185,18 @@ class OverlapGraph(object):
         return G
 
     @classmethod
-    def generate(cls, seqs : tuple, records : list, genome_length : int): # -> cls: (annotations don't work for this use case apparently)
+    def generate_overlapped(cls, seqs : tuple, overlap_seeds : list): # -> cls:
+
+        n = len(seqs)
+        g = cls(seqs)
+
+        #  for u, v, k_upos, k_vpos, k_urev, k_vrev in overlap_seeds:
+
+
+    @classmethod
+    def generate_gold_standard(cls, seqs : tuple, records : list, genome_length : int): # -> cls: (annotations don't work for this use case apparently)
         """
-        @classmethod generate:
+        @classmethod generate_gold_standard:
 
             Constructs a new OverlapGraph object usingt input reads and
             their gold standard mapping back to original reference.
@@ -285,6 +300,9 @@ class OverlapGraph(object):
         return g
 
     def print(self):
+        """
+        @func print: TODO
+        """
         for u in self.g:
             for v in self.g[u]:
                 arrow = [' ', '--', ' ']

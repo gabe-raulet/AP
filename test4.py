@@ -4,10 +4,10 @@ from FindOverlaps import *
 
 genome_length       = 15
 read_depth          = 5
-mean_read_length    = 8
+mean_read_length    = 6
 sd_read_length      = 1
 circular            = False
-reverse_complements = False
+reverse_complements = True
 
 genome = create_random_genome(genome_length)
 
@@ -20,6 +20,8 @@ pretty_layout(seqs, records)
 write_fasta("genome.fa", [genome], ["chrom1"])
 write_fasta("reads.fa", seqs, names)
 
-k = 5
-w = 1
+#####
+
+k = 4
+w = 0
 overlap_seeds = get_overlap_seeds(seqs, k, w)
