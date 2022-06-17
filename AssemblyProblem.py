@@ -103,7 +103,7 @@ def circular_slice(s : str, i : int, l : int) -> tuple:
     return (cslice, startpos, endpos)
 
 
-def create_reads(genome : str, read_depth : int, mean_read_length : int, sd_read_length : float, reverse_complements : bool = True) -> tuple:
+def create_reads(genome : str, read_depth : int, mean_read_length : int, sd_read_length : float, circular : bool = True, reverse_complements : bool = True) -> tuple:
 
     """
     @func create_reads:
@@ -119,6 +119,8 @@ def create_reads(genome : str, read_depth : int, mean_read_length : int, sd_read
     @param mean_read_length: The average read length.
 
     @param sd_read_length: The standard deviation of the read length normal distribution.
+
+    @param circular: Boolean for whether genome should be treated as circular or not
 
     @param reverse_complements: Boolean for whether reverse complements should be simulated
                                 with 1/2 probability.
@@ -149,14 +151,26 @@ def create_reads(genome : str, read_depth : int, mean_read_length : int, sd_read
 
         readpos = random.randint(0,genome_length-1)
 
-        while True:
-            readlen = int(np.random.normal(mean_read_length, sd_read_length))
-            if readlen > 0:
-                break
+        if circular:
+            readpos = random.randint(0,genome_length-1)
+            while True:
+                readlen = int(np.random.normal(mean_read_length, sd_read_length))
+                if readlen > 0:
+                    break
+            readseq, startpos, endpos = circular_slice(genome, readpos, readlen)
+
+        else:
+            readpos = random.randint(0,genome_length-mean_read_length-1)
+            while True:
+                readlen = int(np.random.normal(mean_read_length, sd_read_length))
+                if readlen > 0 and readpos + readlen <= genome_length:
+                    break
+
+            startpos = readpos
+            endpos = readpos + readlen - 1
+            readseq = genome[readpos : endpos + 1]
 
         readrev = False if not reverse_complements else bool(random.randint(0,1))
-
-        readseq, startpos, endpos = circular_slice(genome, readpos, readlen)
 
         if startpos < endpos:
             coords = "[{}..{}]".format(startpos, endpos)
@@ -251,14 +265,14 @@ def pretty_layout(seqs : tuple, records : list, filename = None) -> None:
             for i in range(n):
                 u, upos, urev = records[i]
                 useq = seqs[u]
-                uformat = ' ' * (upos-1) + '<' + useq.translate(comp_tab)[::-1] if urev else ' ' * upos + useq + '>'
-                f.write("{:>8}: {}\n".format(u, uformat))
+                uformat = ' ' * (upos) + '<' + useq.translate(comp_tab)[::-1] if urev else ' ' * (upos+1) + useq + '>'
+                f.write("{:>4}: {}\n".format(u, uformat))
     else:
         for i in range(n):
             u, upos, urev = records[i]
             useq = seqs[u]
-            uformat = ' ' * (upos-1) + '<' + useq.translate(comp_tab)[::-1] if urev else ' ' * upos + useq + '>'
-            sys.stdout.write("{:>8}: {}\n".format(u, uformat))
+            uformat = ' ' * (upos) + '<' + useq.translate(comp_tab)[::-1] if urev else ' ' * (upos+1) + useq + '>'
+            sys.stdout.write("{:>4}: {}\n".format(u, uformat))
         sys.stdout.flush()
 
 def read_fasta(fasta : str) -> tuple:

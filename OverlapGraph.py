@@ -86,15 +86,11 @@ class OverlapGraph(object):
     def get_naive_tr(self, fuzz):
 
         g = self.g
-        reduce = {}
-
-        for u in g:
-            reduce[u] = {}
+        reduce = {u : {} for u in g}
 
         for u in g:
             for v in g[u]:
                 reduce[u][v] = False
-                reduce[v][u] = False
 
         def edir(u, v): return g[u][v][0]
         def suflen(u, v): return g[u][v][1]
@@ -102,15 +98,14 @@ class OverlapGraph(object):
 
         for u in g:
             for v in g[u]:
-                uv_head, hv_tail = arrows(u, v)
-                for w in g[v]:
-                    vw_head, vw_tail = arrows(v, w)
-                    if w in g[u]:
-                        uw_head, uw_tail = arrows(u, w)
-                        if uw_tail != vw_head and uv_head == uw_head and vw_tail == uw_tail:
-                            if suflen(u, v) + suflen(v, w) >= suflen(u, w) + fuzz and suflen(v, u) + suflen(w, v) >= suflen(w, u) + fuzz:
-                                reduce[u][w] = True
-                                reduce[w][u] = True
+                uv_head, uv_tail = arrows(u,v)
+                for w in set(g[v]).intersection(g[u]):
+                    vw_head, vw_tail = arrows(v,w)
+                    uw_head, uw_tail = arrows(u,w)
+                    if uv_head == uw_head and vw_tail == uw_tail and uv_tail != vw_head:
+                        if suflen(u,w) + suflen(w,v) >= suflen(u,w) + fuzz:
+                            reduce[u][w] = True
+                            reduce[w][u] = True
 
         tr = OverlapGraph(self.seqs)
 
@@ -122,32 +117,6 @@ class OverlapGraph(object):
                     tr.add_overlap(w, u, edir(w, u), suflen(w, u))
 
         return tr
-
-    #  def get_naive_tr(self, fuzz):
-
-        #  g = self.g
-        #  reduce = {}
-
-        #  for u in g:
-            #  reduce[u] = {}
-            #  for v in g[u]:
-                #  reduce[u][v] = False
-
-        #  for u in g:
-            #  for v in g[u]:
-                #  for w in g[v]:
-                    #  if w in g[u]:
-                        #  if g[u][v] + g[v][w] >= g[u][w] + fuzz:
-                            #  reduce[u][w] = True
-
-        #  tr = OverlapGraph(self.seqs)
-
-        #  for u in g:
-            #  for w in g[u]:
-                #  if not reduce[u][w]:
-                    #  tr.add_overlap(u, w, g[u][w])
-
-        #  return tr
 
     def add_overlap(self, u : int, v : int, d : int, l : int):
         """
@@ -314,3 +283,13 @@ class OverlapGraph(object):
                                 g.add_overlap(v, u, 1, prelen)
 
         return g
+
+    def print(self):
+        for u in self.g:
+            for v in self.g[u]:
+                arrow = [' ', '--', ' ']
+                d, l = self.g[u][v]
+                t, h = ((d>>1)&1, d&1)
+                arrow[0] = '>' if t==0 else '<'
+                arrow[-1] = '>' if h==1 else '<'
+                print("({}) {} ({}) :: {}".format(u, "".join(arrow), v, l))
