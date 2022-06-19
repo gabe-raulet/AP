@@ -176,6 +176,7 @@ def compress_kmer_array(kmer_array : list) -> dict:
         i = j
     return kmer_dict
 
+
 def get_overlap_seeds(seqs : list, k : int, w : int) -> list:
     """
     @func get_overlap_seeds:
@@ -192,7 +193,7 @@ def get_overlap_seeds(seqs : list, k : int, w : int) -> list:
 
     @return overlap_seeds:
 
-        A list of (u, v, upos, vpos, urev, vrev) tuples where:
+        A list of (u, v, upos, vpos, urev) tuples where:
 
             u: The source read index.
 
@@ -202,9 +203,8 @@ def get_overlap_seeds(seqs : list, k : int, w : int) -> list:
 
             vpos: The starting position within v of the shared k-mer seed.
 
-            urev: Whether the k-mer substring in u is non-canonical.
-
-            vrev: Whether the k-mer substring in v is non-canonical.
+            rc: Whether the shared k-mer is reverse complemented on one of
+                the sequences.
     """
 
     kmer_dict = compress_kmer_array(get_kmer_array(seqs, k, w))
@@ -217,7 +217,6 @@ def get_overlap_seeds(seqs : list, k : int, w : int) -> list:
             for i in range(j):
                 u, upos, urev = triples[i]
                 v, vpos, vrev = triples[j]
-                overlap_seeds.append((u, v, upos, vpos, urev, vrev))
+                overlap_seeds.append((u, v, upos, vpos, bool(urev != vrev)))
 
     return overlap_seeds
-

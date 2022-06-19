@@ -184,14 +184,70 @@ class OverlapGraph(object):
         G.vs['seq'] = self.seqs
         return G
 
+    #  @classmethod
+    #  def generate_overlapped(cls, seqs : tuple, overlap_seeds : list): # -> cls:
+
+        #  n = len(seqs)
+        #  g = cls(seqs)
+
     @classmethod
-    def generate_overlapped(cls, seqs : tuple, overlap_seeds : list): # -> cls:
+    def generate_seed_based(cls, seqs : tuple, overlap_seeds : list, k : int): # -> cls:
+        """
+        @classmethod generate_seed_based:
+
+            Constructs a new OverlapGraph object using k-mer based overlap_seeds
+            generated from @FindOverlaps.get_overlap_seeds. Each seeded overlap is
+            extended as if the remaining non-seeded parts are assumed to be perfect
+            matches. Given multiple seeds between two given reads, The first seed
+            parsed is used and the rest are discarded.
+
+        @param seqs: Tuple of reads ordered by read index.
+
+        @param overlap_seeds: List of overlap seeds. See @FindOverlaps.get_overlap_seeds.__doc__
+                              for details.
+
+        @param k: The seed length. This is needed for reverse complement overlaps, otherwise
+                  we can't find the correct overlaps.
+
+        @return instantiated OverlapGraph object.
+        """
 
         n = len(seqs)
         g = cls(seqs)
 
-        #  for u, v, k_upos, k_vpos, k_urev, k_vrev in overlap_seeds:
+        for u, v, upos, vpos, rc in overlap_seeds:
 
+            useq = seqs[u]
+            vseq = seqs[v]
+            ulen = len(useq)
+            vlen = len(vseq)
+
+            if rc: vpos = vlen - vpos - k - 1
+
+            if upos <= vpos and (ulen - upos) <= (vlen - vpos):
+                g.add_overlap(v, u, -1, 0)
+            elif upos >= vpos and (ulen - upos) >= (vlen - vpos):
+                g.add_overlap(u, v, -1, 0)
+            else:
+                if upos > vpos:
+                    suflen = (vlen - vpos) - (ulen - upos)
+                    prelen = upos - vpos
+                    if not rc:
+                        g.add_overlap(u, v, 1, suflen)
+                        g.add_overlap(v, u, 2, prelen)
+                    else:
+                        g.add_overlap(u, v, 0, suflen)
+                        g.add_overlap(v, u, 0, prelen)
+                else:
+                    suflen = vpos - upos
+                    prelen = (ulen - upos) - (vlen - vpos)
+                    if not rc:
+                        g.add_overlap(u, v, 2, suflen)
+                        g.add_overlap(v, u, 1, prelen)
+                    else:
+                        g.add_overlap(u, v, 3, suflen)
+                        g.add_overlap(v, u, 3, prelen)
+        return g
 
     @classmethod
     def generate_gold_standard(cls, seqs : tuple, records : list, genome_length : int): # -> cls: (annotations don't work for this use case apparently)
@@ -208,23 +264,12 @@ class OverlapGraph(object):
         @param genome_length: Reference genome length; used to calculate overlaps
                               that cross the circular barrier.
 
-        @raise TypeError: If input parameters have wrong type.
-
         @raise ValueError: If len(seqs) != len(records).
 
         @raise AssertionError: If records are incorrectly sorted (should never happen).
 
         @return instantiated OverlapGraph object.
         """
-
-        if not isinstance(seqs, tuple):
-            raise TypeError("Input sequences are not a tuple.")
-
-        if not isinstance(records, list):
-            raise TypeError("Input records not a list.")
-
-        if not isinstance(genome_length, int):
-            raise TypeError("Genome length not an integer.")
 
         n = len(seqs)
 
