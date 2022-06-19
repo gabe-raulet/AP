@@ -193,7 +193,7 @@ def get_overlap_seeds(seqs : list, k : int, w : int) -> list:
 
     @return overlap_seeds:
 
-        A list of (u, v, upos, vpos, urev) tuples where:
+        A list of (u, v, upos, vpos, rc) tuples where:
 
             u: The source read index.
 
